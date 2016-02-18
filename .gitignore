@@ -1,0 +1,8 @@
+.DS_Store
+.svn
+log/*.log
+tmp/**
+slides/node_modules/
+slides/.sass-cache
+slides/css/reveal.min.css
+slides/js/reveal.min.js
