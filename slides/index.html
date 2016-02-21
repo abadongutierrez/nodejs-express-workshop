@@ -4,10 +4,10 @@
 	<head>
 		<meta charset="utf-8">
 
-		<title>reveal.js – The HTML Presentation Framework</title>
+		<title>NodeJS</title>
 
-		<meta name="description" content="A framework for easily creating beautiful presentations using HTML">
-		<meta name="author" content="Hakim El Hattab">
+		<meta name="description" content="NodeJS Workshop Slides">
+		<meta name="author" content="Rafael Gutierrez">
 
 		<meta name="apple-mobile-web-app-capable" content="yes">
 		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -15,7 +15,7 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
 
 		<link rel="stylesheet" href="css/reveal.css">
-		<link rel="stylesheet" href="css/theme/black.css" id="theme">
+		<link rel="stylesheet" href="css/theme/night.css" id="theme">
 
 		<!-- Code syntax highlighting -->
 		<link rel="stylesheet" href="lib/css/zenburn.css">
@@ -40,6 +40,294 @@
 
 			<!-- Any section element inside of this container is displayed as a slide -->
 			<div class="slides">
+                <section data-markdown>
+                    <script type="text/template">
+                        # NodeJS Workshop
+
+                        Created by Rafael Gutierrez / @abaddon_gtz / rgutierrez@nearsoft.com
+                    </script>
+                </section>
+
+                <section data-markdown data-separator-notes="^Note:">
+                    <script type="text/template">
+                        ## Some theory
+                        
+                        Note:
+                    </script>
+                </section>
+
+                <section data-markdown data-separator-notes="^Note:">
+                    <script type="text/template">
+                        ## NodeJS
+
+                        * Node.js is a platform built on Chrome’s V8 JavaScript engine for easily building fast,
+                        scalable network applications.
+                        * Node.js uses an __event-driven__, __non-blocking I/O__ model that makes it lightweight and efficient,
+                        perfect for data-intensive real-time applications.
+                        
+                        Note:
+                    </script>
+                </section>
+
+                <section data-markdown data-separator-notes="^Note:">
+                    <script type="text/template">
+                        ## Blocking I/O
+
+                        * In traditional blocking I/O programming, the function call corresponding to an I/O request
+                        will __block the execution__ of the thread until the operation completes.
+
+```JavaScript
+// blocks the thread until the data is available
+data = socket.read();
+// data is available
+process(data);
+```
+
+                        Note:
+                    </script>
+                </section>
+
+                <section data-markdown data-separator-notes="^Note:">
+                    <script type="text/template">
+                        ## Blocking I/O in Web Servers
+
+                        * The traditional approach to handle concurrency in web servers is to kick off a thread
+                        or a process (or to reuse one taken from a pool) for each concurrent connection that needs to be handled. 
+
+                        ![alt text](img/web_server_threads.png "Threads")
+
+                        Note:
+                    </script>
+                </section>
+
+                <section data-markdown data-separator-notes="^Note:">
+                    <script type="text/template">
+                        ## Threads
+
+                        * A thread is not cheap in terms of system resources, it consumes memory and causes context switches,
+                        so having a long running thread for each connection and not using it for most of the time, is not
+                        the best compromise in terms of efficiency.
+                            * __Context Switch in Threads__: the process of storing and restoring the state (more specifically,
+                            the execution context) of a process or thread so that execution can be resumed from the same point at a later time.
+                            [https://en.wikipedia.org/wiki/Context_switch]
+
+                        Note:
+                    </script>
+                </section>
+
+                <section data-markdown data-separator-notes="^Note:">
+                    <script type="text/template">
+                        ## Non-Blocking I/O
+
+                        * Most modern operating systems support another mechanism to access resources, called non-blocking I/O.
+                        * In this operating mode, the system call always returns immediately without waiting for the data.
+                        If no results are available the function will simply return a predefined constant indicating that there
+                        is no data available to return at that moment.
+
+                        Note:
+                    </script>
+                </section>
+
+                 <section data-markdown data-separator-notes="^Note:">
+                    <script type="text/template">
+                        ## Non-Blocking I/O Processing Techniques
+
+                        * __Busy-waiting__: Actively poll the resource within a loop until some actual data is returned.
+                            * Not an ideal technique for processing non-blocking resources
+                        * __Synchronous event demultiplexer__ or __Event notification interface__: Collects and queues I/O events
+                        that come from a set of watched resources, and block until new events are available to process (event loop).
+                            * Most modern operating systems provide a native mechanism to handle this
+                        * With both techniques a single thread can process several I/O operations.
+
+                        Note:
+                    </script>
+                </section>
+
+                <section data-markdown data-separator-notes="^Note:">
+                    <script type="text/template">
+                        ## Non-Blocking I/O in Web Servers
+
+                        * Tasks are spread over time, instead of being spread across multiple threads. This has the clear
+                        advantage of minimizing the total idle time of the threa
+
+                        ![alt text](img/web_server_non_blocking.png "Non-blocking")
+
+                        Note:
+                    </script>
+                </section>
+
+                <section data-markdown data-separator-notes="^Note:">
+                    <script type="text/template">
+                        ## libuv - Non-Blocking Engine for NodeJs
+
+                        * Each operating system has its own interface for the Event Demultiplexer:
+                            * epoll on Linux.
+                            * kqueue on Mac OS X.
+                            * I/O Completion Port API (IOCP) on Windows.
+                        * The Node.js core team created a C library called __libuv__, with the objective to make Node.js
+                        compatible with all the major platforms and normalize the non-blocking behavior of the different types of resource.
+                        [http://nikhilm.github.io/uvbook/]
+
+                        Note:
+                    </script>
+                </section>
+
+                <section data-markdown data-separator-notes="^Note:">
+                    <script type="text/template">
+                        ## Running NodeJS Programs
+
+                        * Using the REPL. Type `node` in your command line.
+
+```Javascript
+$> node
+> console.log('hello nodejs!');
+hello nodejs!
+undefined
+> 
+```
+                        * Create a .js file and type: `node file.js`
+
+
+```Javascript
+$> node hello.js
+hello nodejs! 
+```
+
+                        Note:
+                    </script>
+                </section>
+
+                <section data-markdown data-separator-notes="^Note:">
+                    <script type="text/template">
+                        ## Your first NodeJS Very Basic Web Server
+
+                        * Create a file with this content and execute it:
+
+```Javascript
+var http = require('http');
+
+http.createServer(function (request, response) {
+    response.writeHead(200, {
+        'Context-Type': 'text/plain',
+    });
+    response.end('Hello World!');
+}).listen(3000);
+
+console.log('Server running at http://localhost:3000');
+```
+
+[https://nodejs.org/api/http.html]
+
+                        Note:
+                    </script>
+                </section>
+
+                <section data-markdown data-separator-notes="^Note:">
+                    <script type="text/template">
+                        ## Require??
+
+                        * Node.js follows the CommonJS module system, and the builtin `require()` function is the way
+                        to include __modules__ that exist in separate files/folders.
+
+                        Note:
+                    </script>
+                </section>
+
+                <section data-markdown data-separator-notes="^Note:">
+                    <script type="text/template">
+                        ## Modules
+
+                        * Modules are the bricks for structuring non-trivial applications
+                        * The main mechanism to enforce information hiding by keeping private all the functions
+                        and variables that are not explicitly marked to be exported.
+                        * Everything inside a module is private unless it is assigned to the `module.exports` variable.
+
+                        Note:
+                    </script>
+                </section>
+
+                <section data-markdown data-separator-notes="^Note:">
+                    <script type="text/template">
+                        ## Module System (I)
+
+                        * Each file is its own module.
+                        * Each file has access to the current module definition using the `module` variable.
+                        * The `export` of the current `module` is determined by the `module.exports` variable.
+                        * To import a module, use the globally available `require()` function.
+
+                        Note:
+                    </script>
+                </section>
+
+                <section data-markdown data-separator-notes="^Note:">
+                    <script type="text/template">
+                        ## Module System (III)
+
+                        In a file called `say.js`:
+
+```
+module.exports = function (msg) {
+    console.log('Say: ' + mgs);
+}
+```
+
+                        In a faile called `app.js`:
+
+```
+var say = require('./say.js');
+
+say('hello!');
+```
+
+                        Execute using: `node app.js`
+
+```
+$> node app.js
+Say: hello!
+```
+
+                        Note:
+                    </script>
+                </section>
+
+                <section data-markdown data-separator-notes="^Note:">
+                    <script type="text/template">
+                        ## Module System (IV)
+
+                        * `require()` function is __synchronous__.
+                        * This solves the __dependency hell__ by loading different versions of a module depending on where the
+                        module is loaded from. Each module can have its own private dependencies.
+                        * Each module is loaded and evaluated only the first time it is required, since any subsequent call
+                        of `require()` will simply return the cached version
+
+                        Note:
+                    </script>
+                </section>
+
+                <section data-markdown data-separator-notes="^Note:">
+                    <script type="text/template">
+                        ## `module.exports` vs `exports`
+
+                        * `require()` function is __synchronous__.
+                        * This solves the __dependency hell__ by loading different versions of a module depending on where the
+                        module is loaded from. Each module can have its own private dependencies.
+                        * Each module is loaded and evaluated only the first time it is required, since any subsequent call
+                        of `require()` will simply return the cached version
+
+                        Note:
+                    </script>
+                </section>
+
+                <section data-markdown data-separator-notes="^Note:">
+                    <script type="text/template">
+                        ## Lab01 - Module definition patterns
+
+                        * Go to /labs/lab01 and read `README.md`.
+
+                        Note:
+                    </script>
+                </section>
+
 				<section>
 					<h1>Reveal.js</h1>
 					<h3>The HTML Presentation Framework</h3>
