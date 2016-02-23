@@ -1,0 +1,19 @@
+extends ../layout
+
+block content
+  h1 Users
+  table.table
+    tr.table-header
+        td First Name
+        td Last Name
+        td email
+        td Actions
+    each user in users
+        tr
+            td #{user.name.first}
+            td #{user.name.last}
+            td
+                a(href="/users/#{user.id}") #{user.email}
+            td
+                a(href="#" class="btn btn-primary") Edit
+                a(href="#" class="btn btn-danger") X

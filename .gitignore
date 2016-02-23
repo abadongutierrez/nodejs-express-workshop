@@ -6,3 +6,6 @@ slides/node_modules/
 slides/.sass-cache
 slides/css/reveal.min.css
 slides/js/reveal.min.js
+
+node_modules
+**/node_modules
