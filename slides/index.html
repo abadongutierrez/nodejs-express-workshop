@@ -54,7 +54,10 @@
 
                         * Some Theory
                         * Modules
+                            * Lab01
+                        * Npm
                         * Express
+                            * Lab02
 
                         Note:
                     </script>
@@ -364,6 +367,52 @@ exports = function() {
 
                 <section data-markdown data-separator-notes="^Note:">
                     <script type="text/template">
+                        ## Npm
+
+                        Note:
+                    </script>
+                </section>
+
+                <section data-markdown data-separator-notes="^Note:">
+                    <script type="text/template">
+                        ## Npm (I)
+
+                        * A package manager.
+                        * For Javascript Developers.
+                        * Runs through the command line and manages dependencies for an application.
+                        * The best way to manage locally installed npm packages is to create a `package.json` file.
+
+                        Note:
+                    </script>
+                </section>
+
+                <section data-markdown data-separator-notes="^Note:">
+                    <script type="text/template">
+                        ## Npm (II)
+
+                        * Some useful commands:
+
+```
+// to install dependencies defined in a pacakge.json file
+$> npm install
+
+// to install, by example, lodash and save the dependency in the package.json file
+$> npm install lodash --save
+
+// to install globally, by example, lodash and save the dependency
+// in the package.json file
+$> npm install lodash -g --save
+
+// to run a 'script' defined in a package.json file
+$> npm <script-name>
+```
+
+                        Note:
+                    </script>
+                </section>
+
+                <section data-markdown data-separator-notes="^Note:">
+                    <script type="text/template">
                         ## Express
 
                         Note:
@@ -430,6 +479,346 @@ app.listen(3000, function () {
 $> npm start
 ```
                         * Go to <a href="http://localhost:3000" target="_blank">http://localhost:3000</a>
+                        Note:
+                    </script>
+                </section>
+
+                <section data-markdown data-separator-notes="^Note:">
+                    <script type="text/template">
+                        ## Express - Getting started (III)
+
+                        * Do you think this is too much?
+                        * Use the application generator tool, `express`, to quickly create an application skeleton.
+
+```
+$> npm install express-generator -g
+```
+                        * To view the __help__:
+```
+$> express -h
+```
+                        * Generate `myapp` and run it:
+```
+$> express myapp
+$> cd myapp
+$> npm install
+$> DEBUG=myapp:* npm start
+```
+                        Note:
+                    </script>
+                </section>
+
+                <section data-markdown data-separator-notes="^Note:">
+                    <script type="text/template">
+                        ## Routing (I)
+
+                        * Define application end points (URIs) and how they respond to client request
+                        * Define a route using:
+
+```Javascript
+app.METHOD(PATH, HANDLER)
+```
+                        * `app` is the `express` instance.
+                        * METHOD is the HTTP request method (GET, POST, DELETE, etc) in lowercase.  
+                            * Express supports: `get`, `post`, `put`, `delete`, `options`, ... and a lot more!.
+                        * PATH is the URI.
+                        * HANDLER is the function that is executed when path is matched.
+                        * Example:
+```JavaScript
+app.get('/', function (req, res) {
+    res.send('Hello World!');
+});
+```
+                        Note:
+                    </script>
+                </section>
+
+                <section data-markdown data-separator-notes="^Note:">
+                    <script type="text/template">
+                        ## Routing (II)
+
+                        * There is an special routing method: `app.all()`.
+                        * It is used to execute a handler at a path for all HTTP request methods.
+```Javascript
+app.all('/all', function (req, res, next) {
+    console.log('Accessing the all section ...');
+    next(); // pass control to the next handler
+});
+```
+
+                        Note:
+                    </script>
+                </section>
+
+                <section data-markdown data-separator-notes="^Note:">
+                    <script type="text/template">
+                        ## Route Handler (I)
+
+                        * A handler is a callback function that is executed when a path match the request.
+                        * `express` calls this methods __middleware functions__.
+                        * A __middleware functions__ has acces to:
+                            * the request object
+                            * the response object
+                            * the next middleware function
+                        * __middleware functions__ can:
+                            * Execute any code.
+                            * Make changes to the request and the response objects.
+                            * End the request-response cycle.
+                            * Call the next middleware function in the stack.
+
+                        Note:
+                    </script>
+                </section>
+
+                <section data-markdown data-separator-notes="^Note:">
+                    <script type="text/template">
+                        ## Route Handler (II)
+
+                        * Route handles can be defined as:
+                            * simple handler function
+                            * array of handle functions
+                            * combination of both
+
+```JavaScript
+// just one handler
+app.get('/example/a', function (req, res) {
+    res.send('Hello from A!');
+});
+
+// a chain of handlers
+app.get('/example/b', function (req, res, next) {
+    console.log('the response will be sent by the next function ...');
+    next();
+}, function (req, res) {
+    res.send('Hello from B!');
+});
+
+// an array
+var handler1 = function (req, res, next) { ... };
+var handler2 = function (req, res, next) { ... };
+var handler3 = function (req, res, next) { ... };
+app.get('/example/c', [handler1, handler2, handler3]);
+```
+
+                        Note:
+                    </script>
+                </section>
+
+                <section data-markdown data-separator-notes="^Note:">
+                    <script type="text/template">
+                        ## `express.Route` (I)
+
+                        * Use `express.Route` class to create modular, mountable route handlers. 
+                        * A `Router` instance is a complete middleware and routing system (mini-app).
+                        * Instead of this:
+
+```JavaScript
+app.get('/users', getAllUsersMiddleware);
+app.get('/users/:userId', getUserByIdMiddleware);
+app.post('/users', saveNewUserMiddleware);
+app.put('/users', updateNewUserMiddleware);
+app.delete('/users/:userId', deleteUserMiddleware);
+```
+
+                        Note:
+                    </script>
+                </section>
+
+                <section data-markdown data-separator-notes="^Note:">
+                    <script type="text/template">
+                        ## `express.Route` (II)
+
+                        * Use this:
+
+```JavaScript
+var express = require('express');
+var router = express.Router();
+
+router.get('/', getAllUsersMiddleware);
+router.get('/:userId', getUserByIdMiddleware)
+router.post('/', saveNewUserMiddleware);
+router.put('/', updateNewUserMiddleware);
+router.delete('/:userId', deleteUserMiddleware);
+
+module.exports = router;
+```
+
+                        * Load the router module in the app:
+
+```JavaScript
+var express = require('express');
+var userRouter = require('./userRouter');
+
+var app = express();
+
+// ...
+
+app.user('/users', userRouter);
+
+// ...
+
+```
+
+                        Note:
+                    </script>
+                </section>
+
+                <section data-markdown data-separator-notes="^Note:">
+                    <script type="text/template">
+                        ## Middleware
+
+                        * An Express application can use the following types of middleware:
+                            * Application-level middleware
+                            * Router-level middleware
+                            * Error-handling middleware
+                            * Built-in middleware
+                            * Third-party middleware
+
+                        Note:
+                    </script>
+                </section>
+
+                <section data-markdown data-separator-notes="^Note:">
+                    <script type="text/template">
+                        ## Application-level Middleware
+
+                        * Bind application-level middleware to an instance of the `app` object
+                        by using the `app.use()` and `app.METHOD()` functions
+                        * The function will be executed every time the app receives a request
+                        for any type of HTTP method request.
+
+```JavaScript
+var app = express();
+
+app.use(function (req, res, next) {
+    console.log('Time:', Date.now());
+    next();
+});
+
+app.get('/users', function (req, res, next) {
+    // ...
+    if (users) {
+        res.json({ users: users }); // returns a json
+    } else {
+        res.status(500).json({ error: 'message' });
+    }
+});
+```
+
+                        Note:
+                    </script>
+                </section>
+
+                <section data-markdown data-separator-notes="^Note:">
+                    <script type="text/template">
+                        ## Route-level Middleware
+
+                        * Similar to Application-level Middleware but instead of binded to an instance of the `app`
+                        objects, it is binder to an instance of `express.Router`.
+                        * Load router-level middleware by using the `router.use()` and `router.METHOD()` functions.
+
+```JavaScript
+var app = express();
+var router = express.Router();
+
+// a middleware function with no mount path. This code is executed for every request to the router
+router.use(function (req, res, next) {
+    console.log('Time:', Date.now());
+    next();
+});
+
+router.get('/users', function (req, res, next) {
+    // ...
+    if (users) {
+        res.json({ users: users }); // returns a json
+    } else {
+        res.status(500).json({ error: 'message' });
+    }
+});
+
+// mount the router on the app
+app.use('/', router);
+```
+
+                        Note:
+                    </script>
+                </section>
+
+                <section data-markdown data-separator-notes="^Note:">
+                    <script type="text/template">
+                        ## Error-handling Middleware
+
+                        * Define error-handling middleware functions
+                        * __IMPORTANT__ Error-handling middleware always takes four arguments:
+                        (err, req, res, next)
+                        * You define error-handling middleware last, after other `app.use()` and routes calls
+
+```JavaScript
+var app = express();
+
+// Application-level Middleware
+// Route-level Middleware
+// etc
+
+app.use(function(err, req, res, next) {
+    console.error(err.stack);
+    res.status(500).send('Something broke!');
+});
+```
+
+                        * There is a default error hanlder defined by `express`.
+
+                        Note:
+                    </script>
+                </section>
+
+                <section data-markdown data-separator-notes="^Note:">
+                    <script type="text/template">
+                        ## Built-in Middleware
+
+                        * The only built-in middleware function in Express is `express.static`.
+                        * It is responsible for serving static assets such as HTML files, images, and so on.
+
+```Javascript
+app.use(express.static('public'));
+app.use(express.static('uploads'));
+app.use(express.static('files'));
+```
+
+                        Note:
+                    </script>
+                </section>
+
+                <section data-markdown data-separator-notes="^Note:">
+                    <script type="text/template">
+                        ## Third-party middleware
+
+                        * Use third-party middleware to add functionality to Express apps.
+                        * By example, the `cookie-parser` third-party middleware:
+
+```
+$> npm install cookie-parser --save
+```
+
+```Javascript
+var express = require('express');
+var app = express();
+var cookieParser = require('cookie-parser');
+
+// load the cookie-parsing middleware
+app.use(cookieParser());
+```
+
+                        Note:
+                    </script>
+                </section>
+
+                <section data-markdown data-separator-notes="^Note:">
+                    <script type="text/template">
+                        ## Lab02 - A Simple Express App
+
+                        * Go to `/labs/lab02` and `README.md`.
+
                         Note:
                     </script>
                 </section>

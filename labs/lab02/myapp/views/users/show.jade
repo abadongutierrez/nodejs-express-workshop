@@ -1,0 +1,10 @@
+extends ../layout
+
+block content
+  h1 User
+  div
+    ul
+        li Id: #{user.id}
+        li Name: #{user.name.first}
+        li Last Name: #{user.name.last}
+        li Email: #{user.email}

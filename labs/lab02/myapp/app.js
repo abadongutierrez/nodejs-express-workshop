@@ -8,6 +8,8 @@ var bodyParser = require('body-parser');
 var routes = require('./routes/index');
 var users = require('./routes/users');
 
+var Users = require('./lib/users.js');
+
 var app = express();
 
 // view engine setup
@@ -23,7 +25,16 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', routes);
-app.use('/users', users);
+
+// -------------------------------------------------------------------------------------------------
+
+// TODO: User the module lib/users.js and write the missing routes here using
+// the express `app`
+app.get('/users', function(req, res, next) {
+  res.render('users/list', { users: Users.findAll() });
+});
+
+// -------------------------------------------------------------------------------------------------
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

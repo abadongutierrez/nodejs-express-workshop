@@ -1,0 +1,23 @@
+extends ../layout
+
+block content
+  h1 Users
+  div
+    a(href="/users/new" class="btn btn-primary") New User
+  br
+  div
+      table.table
+        tr.table-header
+            td First Name
+            td Last Name
+            td email
+            td Actions
+        each user in users
+            tr
+                td #{user.name.first}
+                td #{user.name.last}
+                td
+                    a(href="/users/#{user.id}") #{user.email}
+                td
+                    a(href="/users/#{user.id}/edit" class="btn btn-primary") Edit
+                    a(href="/users/#{user.id}/delete" class="btn btn-danger") X
